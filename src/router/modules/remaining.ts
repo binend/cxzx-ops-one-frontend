@@ -55,16 +55,6 @@ export default [
       showLink: false
     }
   },
-  // 3D系统架构监控页面
-  {
-    path: "/system-architecture-3d",
-    name: "SystemArchitecture3D",
-    component: () => import("@/views/system-architecture-3d/index.vue"),
-    meta: {
-      title: "3D系统架构",
-      showLink: false
-    }
-  },
   // 下面是一个无layout菜单的例子（一个全屏空白页面），因为这种情况极少发生，所以只需要在前端配置即可（配置路径：src/router/modules/remaining.ts）
   {
     path: "/empty",
