@@ -8,6 +8,106 @@
   color: #333333;
 }
 
+/* 强制减少所有间距的紧凑布局规则 */
+.zone-grid {
+  gap: clamp(8px, 1.5vw, 15px) !important;
+  margin-bottom: 15px !important;
+  row-gap: clamp(8px, 1.5vw, 12px) !important; /* 减少行间距 */
+  column-gap: clamp(8px, 1.5vw, 15px) !important; /* 恢复正常的列间距 */ /* 保持列间距 */
+}
+
+.zones-container {
+  padding: clamp(8px, 1.5vw, 12px) clamp(12px, 1.8vw, 16px) !important;
+}
+
+.zone-header {
+  margin-bottom: clamp(8px, 1.5vw, 10px) !important;
+  padding-bottom: clamp(6px, 1vw, 10px) !important;
+}
+
+.middle-section {
+  margin-bottom: clamp(6px, 1.2vw, 10px) !important;
+  padding: clamp(6px, 1.2vw, 10px) !important;
+}
+
+.apps-container {
+  padding: 8px 0;
+  gap: clamp(4px, 1vw, 8px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: start;
+  width: 100%;
+  align-content: flex-start;
+  flex: 1; /* 填充剩余空间 */
+}
+
+/* DMZ区域特殊样式：左对齐，只包含两个应用 */
+.zone.zone-dmz {
+  flex: 0 0 auto !important; /* 不拉伸，根据内容自适应宽度 */
+  width: fit-content !important; /* 宽度适应内容 */
+  min-width: auto !important;
+  max-width: none !important;
+  justify-self: flex-start !important; /* 左对齐 */
+  align-self: flex-start !important;
+  margin-right: auto !important; /* 右边自动留白 */
+}
+
+/* DMZ区域的应用容器 */
+.zone.zone-dmz .apps-container {
+  width: fit-content !important;
+  min-width: auto !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important; /* 不换行，两个应用水平排列 */
+  gap: clamp(8px, 1.5vw, 15px) !important;
+}
+
+/* DMZ区域的应用按钮 - 完全自适应两个应用 */
+.zone.zone-dmz .app-button-3d {
+  min-width: auto;
+  max-width: none;
+  width: fit-content;
+  height: auto;
+  min-height: 32px;
+  margin: 0;
+  padding: 0;
+  flex: 0 1 auto;
+  transform-style: preserve-3d;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.app-button-face {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(6px, 1.2vw, 12px) clamp(8px, 1.5vw, 16px);
+  border-radius: 8px;
+  position: absolute;
+  backface-visibility: hidden;
+  box-sizing: border-box;
+}
+
+.app-name {
+  font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+  font-weight: 500;
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  text-align: center;
+}
+
+.stats-bar {
+  margin: clamp(5px, 1vw, 8px) auto clamp(6px, 1.2vw, 10px) auto !important;
+  padding: clamp(6px, 1.2vw, 10px) clamp(10px, 1.8vw, 15px) !important;
+}
+
 /* 背景动画 */
 .background-animation {
   position: fixed;
@@ -23,64 +123,111 @@
 .zones-container {
   position: relative;
   z-index: 10;
-  padding: clamp(15px, 3vw, 25px) clamp(10px, 2vw, 20px);
-  max-width: 90vw;
+  padding: clamp(5px, 1vw, 8px) 20px; /* 左右边距固定20px */
+  max-width: min(calc(100vw - 40px), 2000px); /* 减去左右边距 */
   width: 100%;
-  margin: 0 auto;
+  margin: 0 !important; /* 移除上下边距，让网格贴到顶部 */
   perspective: 2000px;
   transform-style: preserve-3d;
   box-sizing: border-box;
 }
 
 .zone-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(8, minmax(80px, auto));
-  gap: clamp(20px, 3vw, 25px);
-  margin-bottom: 25px;
-  transform-style: preserve-3d;
-  transform: rotateX(1deg);
-  transition: transform 0.6s ease;
+  display: flex;
+  flex-direction: column; /* 垂直方向排列三行 */
+  gap: clamp(8px, 1.5vw, 15px) !important;
+  margin-bottom: 15px !important;
   width: 100%;
-  max-width: 1600px;
-  margin: 0 auto 25px auto;
+  max-width: 100%; /* 使用100%宽度，允许自适应 */
+  margin: 0 auto 15px auto !important;
   box-sizing: border-box;
-  justify-items: stretch;
+}
+
+/* 每行的弹性容器 */
+.zone-row {
+  display: flex;
+  gap: clamp(8px, 1.5vw, 15px) !important;
+  justify-content: space-between; /* 区域之间均匀分布 */
+  width: 100%;
+}
+
+/* 第一行：中台 + 应用区域，两列布局 */
+.zone-row.two-columns {
+  justify-content: space-between;
+  gap: clamp(15px, 2vw, 25px) !important;
+}
+
+/* 第一行区域特殊处理：合理比例分配 */
+.zone-row.two-columns .zone-middle {
+  flex: 1 1 35%; /* 中台区域占35%宽度，比应用区域略窄 */
+  min-width: 320px; /* 设置合理的最小宽度 */
+  max-width: 500px; /* 设置最大宽度，防止过宽 */
+  margin: 0;
+}
+
+.zone-row.two-columns .zone-app {
+  flex: 1 1 65%; /* 应用区域占65%宽度，获得更多空间 */
+  min-width: 400px; /* 设置合理的最小宽度 */
+  max-width: none; /* 不限制最大宽度 */
+  margin: 0;
+}
+
+/* 第二行：三列布局（DMZ + MRS + 云平台） */
+.zone-row.three-columns {
+  display: flex;
+  justify-content: space-between;
   align-items: stretch;
+  gap: clamp(12px, 2vw, 20px);
+  width: 100%;
 }
 
-/* 智能区域布局 - 避免重叠的网格单位 */
-.zone-dmz {
-  grid-column: 1 / 2;
-  grid-row: 1 / 2;
+/* 第二行区域比例设置：自适应宽度 */
+.zone-row.three-columns .zone-dmz {
+  flex: 1 1 auto; /* 自适应，基础权重 */
+  min-width: 250px; /* DMZ区域最小宽度 */
+  max-width: none; /* 不限制最大宽度 */
 }
 
-.zone-mrs {
-  grid-column: 2 / 4;
-  grid-row: 1 / 3;
+.zone-row.three-columns .zone-mrs {
+  flex: 2 1 auto; /* MRS区域权重稍大，应用更多 */
+  min-width: 350px; /* MRS区域最小宽度更大 */
+  max-width: none; /* 不限制最大宽度 */
 }
 
-.zone-middle {
-  grid-column: 4 / 7;
-  grid-row: 1 / 4;
+.zone-row.three-columns .zone-cloud {
+  flex: 1 1 auto; /* 自适应，基础权重 */
+  min-width: 280px; /* 云平台区域最小宽度 */
+  max-width: none; /* 不限制最大宽度 */
 }
 
+/* === Flexbox布局区域样式 === */
+/* 默认flex设置（只适用于没有特定设置的.zone-app） */
 .zone-app {
-  grid-column: 1 / 4;
-  grid-row: 2 / 6;
+  flex: 1; /* 应用区域平均分配空间 */
+  min-width: 0; /* 允许flex项目缩小 */
 }
 
-.zone-cloud {
-  grid-column: 4 / 7;
-  grid-row: 4 / 9;
+/* 中台区域使用独立的紧凑设置，不受默认规则影响 */
+.zone-middle {
+  flex: 0 1 auto !important; /* 强制不主动增长 */
+  width: fit-content !important; /* 强制宽度适应内容 */
+  min-width: auto !important; /* 强制移除最小宽度 */
+  max-width: none !important; /* 不限制最大宽度 */
 }
+
+/* 云平台区域特殊处理 */
+.zone-cloud {
+  flex: none; /* 云平台区域不伸缩，保持原始宽度 */
+  max-width: 600px; /* 限制最大宽度 */
+}
+
+/* DMZ和MRS区域在第一行的1:1比例设置已在上面定义 */
+
+
 
 /* 移除固定网格布局，使用自适应布局 */
 
-/* 鼠标移动时的3D倾斜效果 */
-.zones-container:hover .zone-grid {
-  transform: rotateX(1deg) rotateY(0.5deg);
-}
+/* 单个区域3D倾斜效果由JavaScript动态控制 */
 
 /* 区域样式 */
 .zone {
@@ -97,62 +244,91 @@
   perspective: 1000px;
   min-height: 200px;
   box-sizing: border-box;
+  /* 为3D变换添加更平滑的过渡 */
+  transform-origin: center center;
+  /* 自适应宽度设置 */
+  width: auto;
+  flex-shrink: 0;
 }
 
-/* DMZ区域特殊样式 - 紧凑布局（2个应用） */
+/* DMZ区域 - 最小区域(2个应用) - 第三行布局 */
 .zone-dmz {
-  min-height: 160px;
-  max-height: 200px;
-  padding: clamp(10px, 2vw, 18px);
+  min-height: auto !important;
+  height: fit-content !important;
+  width: 100%; /* 占满flex容器空间 */
+  padding: clamp(8px, 1.2vw, 15px) !important;
   background: linear-gradient(
     135deg,
     rgba(0, 0, 0, 0.85),
     rgba(20, 20, 40, 0.8)
-  );
+  ) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin: 0; /* 去掉居中，让flex控制 */
+  /* 在第三行中适当调整最小高度 */
+  min-height: 160px !important;
 }
 
 .zone-dmz .zone-header {
-  margin-bottom: clamp(8px, 1.5vw, 12px);
-  padding-bottom: clamp(6px, 1vw, 10px);
+  margin-bottom: clamp(4px, 0.8vw, 8px) !important;
+  padding-bottom: clamp(3px, 0.6vw, 6px) !important;
 }
 
 .zone-dmz .apps-container {
-  justify-content: center;
-  gap: clamp(20px, 5vw, 35px);
-  padding: clamp(10px, 2vw, 15px) 0;
+  justify-content: center !important;
+  gap: clamp(10px, 2vw, 16px) !important;
+  padding: clamp(4px, 0.8vw, 8px) 0 !important;
+  width: 100% !important; /* 还原为100%宽度 */
+  flex: 1; /* 填充剩余空间 */
 }
 
 .zone-dmz .app-button-3d {
-  min-width: 130px;
-  max-width: 200px;
-  transform: scale(1.05);
+  min-width: 90px !important;
+  max-width: 140px !important;
+  transform: scale(0.9) !important;
 }
 
-/* MRS区域优化（9个应用） */
+/* MRS区域 - 中等区域(9个应用) - 三列布局中间 */
 .zone-mrs {
-  min-height: 280px;
-  max-height: 340px;
+  min-height: auto;
+  height: fit-content;
   background: linear-gradient(
     135deg,
     rgba(0, 20, 40, 0.85),
     rgba(0, 0, 0, 0.8)
   );
+  padding: clamp(12px, 2vw, 20px);
+  display: flex;
+  flex-direction: column;
+  /* 在三列布局中移除居中限制，让flex控制 */
+  max-width: none;
+  margin: 0;
+  min-height: 200px; /* 与其他区域保持一致的高度 */
 }
+
 
 .zone-mrs .apps-container {
   gap: clamp(5px, 1.2vw, 10px);
-  padding: clamp(5px, 1vw, 10px) 0;
+  padding: clamp(6px, 1vw, 10px) 0;
+  justify-content: flex-start;
+  align-content: flex-start;
+  flex: 1; /* 填充剩余空间 */
 }
 
-/* 云平台区域优化（8个应用） */
+/* 云平台区域 - 中等区域(8个应用) - 第三行布局 */
 .zone-cloud {
-  min-height: 260px;
-  max-height: 320px;
+  min-height: 200px;
   background: linear-gradient(
     135deg,
     rgba(40, 0, 40, 0.85),
     rgba(0, 0, 0, 0.8)
   );
+  padding: clamp(15px, 2.5vw, 25px);
+  display: flex;
+  flex-direction: column;
+  margin-top: 0; /* 移除负的上边距，在第三行中正常排列 */
+  /* 确保与DMZ区域高度协调 */
+  min-height: 200px !important;
 }
 
 .zone-cloud .apps-container {
@@ -161,40 +337,53 @@
   padding: clamp(5px, 1vw, 10px) 0;
 }
 
-/* 中台区域优化（19个应用） */
+/* 中台区域 - 第二大区域(19个应用) - 简洁设置 */
 .zone-middle {
   min-height: 380px;
-  max-height: 450px;
   background: linear-gradient(
     135deg,
     rgba(0, 40, 20, 0.85),
     rgba(0, 0, 0, 0.8)
   );
+  padding: clamp(15px, 2.5vw, 25px);
+  display: flex;
+  flex-direction: column;
+  margin-top: -10px; /* 负的上边距让区域上移 */
+  box-sizing: border-box;
+}
+
+.zone-middle .zone-header {
+  margin-bottom: clamp(8px, 1.5vw, 12px) !important;
+  padding-bottom: clamp(6px, 1vw, 10px) !important;
 }
 
 .zone-middle .apps-container {
   gap: clamp(4px, 1vw, 8px);
   justify-content: flex-start;
   align-content: flex-start;
-  padding: clamp(5px, 1vw, 8px) 0;
+  padding: 0;
 }
 
-/* 应用区域优化（24个应用 - 最多） */
+/* 应用区域 - 最大区域(24个应用) - Flexbox布局 */
 .zone-app {
-  min-height: 420px;
-  max-height: 500px;
+  min-height: 450px;
+  width: 100%; /* 占满flex容器空间 */
   background: linear-gradient(
     135deg,
     rgba(40, 20, 0, 0.85),
     rgba(0, 0, 0, 0.8)
   );
+  padding: clamp(15px, 2.5vw, 25px);
+  display: flex;
+  flex-direction: column;
+  margin: -15px 0 0 0; /* 保持上移效果 */
 }
 
 .zone-app .apps-container {
-  gap: clamp(3px, 0.8vw, 6px);
+  gap: clamp(5px, 1vw, 8px);
   justify-content: flex-start;
   align-content: flex-start;
-  padding: clamp(5px, 1vw, 8px) 0;
+  padding: 10px 0;
 }
 
 .zone-app .app-button-3d,
@@ -229,8 +418,8 @@
 .zone-mrs {
   border: 2px solid rgba(255, 120, 120, 0.4);
   box-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.5),
-    0 0 30px rgba(255, 120, 120, 0.3),
+    0 8px 25px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(255, 120, 120, 0.25),
     inset 0 1px 0 rgba(255, 120, 120, 0.5);
 }
 
@@ -250,8 +439,8 @@
 .zone-middle {
   border: 2px solid rgba(120, 255, 120, 0.4);
   box-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.5),
-    0 0 30px rgba(120, 255, 120, 0.3),
+    0 8px 25px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(120, 255, 120, 0.25),
     inset 0 1px 0 rgba(120, 255, 120, 0.5);
 }
 
@@ -375,7 +564,7 @@
 }
 
 .zone:hover {
-  transform: translateY(-10px) rotateX(2deg) rotateY(-2deg);
+  /* 移除transform以避免与定位冲突 */
   box-shadow:
     0 25px 60px rgba(0, 0, 0, 0.5),
     0 0 30px rgba(0, 255, 255, 0.3),
@@ -403,9 +592,9 @@
   }
 }
 
-.zone {
+/*.zone {
   animation: float3d 8s ease-in-out infinite;
-}
+}*/
 
 /* 为不同区域设置不同的悬浮延迟 */
 .zone-dmz {
@@ -427,8 +616,8 @@
 .zone-header {
   display: flex;
   align-items: center;
-  margin-bottom: clamp(15px, 3vw, 20px);
-  padding-bottom: clamp(10px, 2vw, 15px);
+  margin-bottom: clamp(8px, 2vw, 12px);
+  padding-bottom: clamp(6px, 1.5vw, 10px);
   border-bottom: 2px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -447,10 +636,10 @@
 
 /* 中台分组样式 */
 .middle-section {
-  margin-bottom: 20px;
+  margin-bottom: clamp(8px, 1.5vw, 12px);
   background: rgba(255, 255, 255, 0.03);
   border-radius: 15px;
-  padding: clamp(15px, 3vw, 20px);
+  padding: clamp(8px, 1.5vw, 12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
   overflow: hidden;
@@ -466,8 +655,8 @@
 
 /* 应用区域的分组样式优化 */
 .zone-app .middle-section {
-  margin-bottom: 18px;
-  padding: clamp(12px, 2.5vw, 18px);
+  margin-bottom: clamp(10px, 1.8vw, 15px);
+  padding: clamp(8px, 1.8vw, 14px);
 }
 
 .zone-app .middle-section:last-child {
@@ -497,8 +686,8 @@
 .section-header {
   display: flex;
   align-items: center;
-  margin-bottom: 18px;
-  padding-bottom: 12px;
+  margin-bottom: clamp(8px, 1.5vw, 10px);
+  padding-bottom: 6px;
   border-bottom: 2px solid rgba(255, 255, 255, 0.15);
   position: relative;
 }
@@ -548,23 +737,78 @@
 }
 
 .middle-section .apps-container {
-  padding-top: 10px;
+  padding-top: 0;
 }
 
 /* 应用容器 */
 .apps-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: clamp(3px, 0.8vw, 6px);
   justify-content: flex-start;
   align-items: center;
   width: 100%;
   align-content: flex-start;
+  padding: 6px 0;
 }
 
-/* 云平台区域特殊处理 */
+/* 不同区域应用容器的特殊处理 */
+.zone-dmz .apps-container {
+  justify-content: center;
+  gap: clamp(15px, 3vw, 20px);
+}
+
+.zone-mrs .apps-container {
+  justify-content: flex-start;
+  gap: clamp(8px, 1.5vw, 12px);
+}
+
 .zone-cloud .apps-container {
-  gap: 5px;
+  justify-content: flex-start;
+  gap: clamp(8px, 1.5vw, 12px);
+  padding: 0;
+}
+
+.zone-middle .apps-container {
+  justify-content: flex-start;
+  gap: clamp(6px, 1.2vw, 10px);
+}
+
+.zone-app .apps-container {
+  justify-content: flex-start;
+  gap: clamp(5px, 1vw, 8px);
+}
+
+/* ECS应用特殊样式优化 */
+.zone-app .app-button-3d,
+.zone-middle .app-button-3d {
+  position: relative;
+}
+
+.zone-app .app-button-face,
+.zone-middle .app-button-face {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.zone-app .app-name,
+.zone-middle .app-name {
+  font-size: clamp(10px, 2vw, 12px);
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow:
+    0 0 6px rgba(255, 255, 255, 0.8),
+    0 1px 3px rgba(0, 0, 0, 0.9);
+  letter-spacing: 0.3px;
+}
+
+.zone-app .app-info,
+.zone-middle .app-info {
+  font-size: clamp(10px, 1.8vw, 12px);
+  font-weight: 600;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
 }
 
 /* 3D按钮应用容器 */
@@ -579,6 +823,8 @@
   width: auto;
   height: auto;
   margin: 0;
+  min-width: min-content;
+  max-width: 100%;
 }
 
 /* 为不同按钮设置不同的悬浮延迟 */
@@ -624,7 +870,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(6px, 1.2vw, 10px) clamp(10px, 2vw, 14px);
+  padding: clamp(6px, 1.2vw, 10px) clamp(12px, 2.5vw, 20px);
   border-radius: clamp(8px, 1.5vw, 12px);
   position: relative;
   backface-visibility: hidden;
@@ -638,9 +884,13 @@
   backdrop-filter: blur(12px);
   width: auto;
   height: auto;
+  min-width: min-content;
+  max-width: none;
   margin: 0;
   flex-shrink: 0;
   font-weight: 600;
+  box-sizing: border-box;
+  text-align: center;
 }
 
 .app-button-front {
@@ -677,10 +927,14 @@
   font-size: 14px;
   text-align: center;
   line-height: 1.4;
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  font-weight: 500;
 }
 
 .app-info div {
   margin-bottom: 8px;
+  color: #ffffff;
 }
 
 .app-info div:last-child {
@@ -695,6 +949,8 @@
   line-height: 1.2;
   transition: all 0.3s ease;
   white-space: nowrap;
+  color: #ffffff;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
 }
 
 /* 应用状态样式 */
@@ -709,7 +965,9 @@
 
 .app-button-front.normal .app-name {
   color: #ffffff;
-  text-shadow: 0 0 8px rgba(40, 180, 40, 0.8);
+  text-shadow:
+    0 0 8px rgba(40, 180, 40, 0.8),
+    0 1px 2px rgba(0, 0, 0, 0.8);
   font-weight: bold;
 }
 
@@ -725,7 +983,9 @@
 
 .app-button-front.warning .app-name {
   color: #ffffff;
-  text-shadow: 0 0 10px rgba(255, 170, 0, 0.9);
+  text-shadow:
+    0 0 10px rgba(255, 170, 0, 0.9),
+    0 1px 2px rgba(0, 0, 0, 0.8);
   font-weight: bold;
 }
 
@@ -794,7 +1054,9 @@
 
 .app-button-front.error .app-name {
   color: #ffffff;
-  text-shadow: 0 0 12px rgba(220, 30, 30, 1);
+  text-shadow:
+    0 0 12px rgba(220, 30, 30, 1),
+    0 1px 2px rgba(0, 0, 0, 0.8);
   font-weight: bold;
 }
 
@@ -896,21 +1158,21 @@
 /* 3D悬浮统计栏 */
 .stats-bar {
   position: relative;
-  margin: clamp(30px, 5vw, 50px) auto clamp(20px, 3vw, 30px) auto;
+  margin: clamp(15px, 3vw, 25px) auto clamp(10px, 2vw, 20px) auto;
   background: rgba(0, 0, 0, 0.9);
   backdrop-filter: blur(20px);
-  border-radius: 25px;
-  padding: clamp(15px, 3vw, 25px) clamp(20px, 4vw, 50px);
+  border-radius: 20px;
+  padding: clamp(10px, 2vw, 18px) clamp(15px, 3vw, 35px);
   z-index: 200;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.6),
-    0 0 40px rgba(0, 255, 255, 0.4),
-    inset 0 0 25px rgba(255, 255, 255, 0.1);
+    0 15px 40px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(0, 255, 255, 0.3),
+    inset 0 0 20px rgba(255, 255, 255, 0.08);
   transform-style: preserve-3d;
   perspective: 1000px;
   animation: statsFloat 5s ease-in-out infinite;
-  max-width: min(1200px, 95vw);
+  max-width: min(1100px, 92vw);
   box-sizing: border-box;
 }
 
@@ -949,7 +1211,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: clamp(20px, 4vw, 40px);
+  gap: clamp(15px, 3vw, 30px);
   flex-wrap: wrap;
 }
 
@@ -959,8 +1221,8 @@
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   transform-style: preserve-3d;
-  padding: clamp(10px, 2vw, 15px) clamp(15px, 3vw, 25px);
-  border-radius: 20px;
+  padding: clamp(8px, 1.5vw, 12px) clamp(12px, 2.5vw, 20px);
+  border-radius: 16px;
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.1),
@@ -970,7 +1232,7 @@
   border: 1px solid rgba(255, 255, 255, 0.15);
   animation: statItemFloat 4s ease-in-out infinite;
   flex-shrink: 0;
-  min-width: 100px;
+  min-width: 90px;
 }
 
 /* 为不同统计项设置不同的悬浮延迟 */
@@ -1076,165 +1338,317 @@
 
 /* 智能响应式布局 */
 
-/* 大屏幕 (≥1400px) - 完美网格布局 */
-@media (min-width: 1400px) {
-  .zone-grid {
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(10, minmax(75px, auto));
-    gap: clamp(20px, 2.5vw, 30px);
-    max-width: 1800px;
+/* 大屏幕 (≥1600px) - 自适应宽度优化 */
+@media (min-width: 1600px) {
+  .zones-container {
+    padding: clamp(5px, 1vw, 8px) 20px; /* 保持20px左右边距 */
+    max-width: min(calc(100vw - 40px), 2000px);
   }
 
-  .zone-dmz {
-    grid-column: 1 / 2;
-    grid-row: 1 / 3;
+  .zone-grid {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(15px, 2vw, 25px) !important;
+    max-width: 100%;
+    margin: 0 auto;
   }
-  .zone-mrs {
-    grid-column: 2 / 4;
-    grid-row: 1 / 4;
+
+  .zone-row.two-columns {
+    gap: clamp(20px, 2.5vw, 30px) !important;
   }
-  .zone-middle {
-    grid-column: 4 / 7;
-    grid-row: 1 / 5;
+
+  .zone-row.three-columns {
+    gap: clamp(15px, 2vw, 25px) !important;
   }
-  .zone-app {
-    grid-column: 1 / 4;
-    grid-row: 3 / 8;
+
+  /* 大屏幕下的宽度调整 - 合理比例 */
+  .zone-row.two-columns .zone-middle {
+    flex: 1 1 35%;
+    min-width: 320px;
+    max-width: 600px;
   }
-  .zone-cloud {
-    grid-column: 4 / 7;
-    grid-row: 5 / 11;
+  .zone-row.two-columns .zone-app {
+    flex: 1 1 65%;
+    min-width: 500px;
+  }
+
+  .zone-row.three-columns .zone-dmz {
+    min-width: 300px;
+  }
+
+  .zone-row.three-columns .zone-mrs {
+    min-width: 450px;
+  }
+
+  .zone-row.three-columns .zone-cloud {
+    min-width: 350px;
   }
 }
 
-/* 中大屏幕 (1000-1399px) - 紧凑网格布局 */
-@media (min-width: 1000px) and (max-width: 1399px) {
-  .zone-grid {
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(10, minmax(60px, auto));
-    gap: clamp(15px, 2vw, 20px);
+/* 中大屏幕 (1200-1599px) - 自适应宽度优化 */
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .zones-container {
+    padding: clamp(5px, 1vw, 8px) 20px; /* 保持20px左右边距 */
+    max-width: min(calc(100vw - 40px), 1600px);
   }
 
-  .zone-dmz {
-    grid-column: 1 / 3;
-    grid-row: 1 / 3;
+  .zone-grid {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(12px, 1.8vw, 20px) !important;
+    max-width: 100%;
+    margin: 0 auto;
   }
-  .zone-mrs {
-    grid-column: 3 / 5;
-    grid-row: 1 / 4;
+
+  .zone-row.two-columns {
+    gap: clamp(15px, 2vw, 25px) !important;
   }
-  .zone-middle {
-    grid-column: 5 / 9;
-    grid-row: 1 / 6;
+
+  .zone-row.three-columns {
+    gap: clamp(10px, 1.5vw, 18px) !important;
   }
-  .zone-app {
-    grid-column: 1 / 5;
-    grid-row: 3 / 8;
+
+  /* 中等屏幕下的宽度调整 - 合理比例 */
+  .zone-row.two-columns .zone-middle {
+    flex: 1 1 40%; /* 中等屏幕下中台区域比例稍大 */
+    min-width: 300px;
+    max-width: 450px;
   }
-  .zone-cloud {
-    grid-column: 5 / 9;
-    grid-row: 6 / 11;
+  .zone-row.two-columns .zone-app {
+    flex: 1 1 60%;
+    min-width: 350px;
+  }
+
+  .zone-row.three-columns .zone-dmz {
+    min-width: 280px;
+  }
+
+  .zone-row.three-columns .zone-mrs {
+    min-width: 400px;
+  }
+
+  .zone-row.three-columns .zone-cloud {
+    min-width: 320px;
   }
 }
 
-/* 中等屏幕 (700-999px) - 混合布局 */
-@media (min-width: 700px) and (max-width: 999px) {
+/* 中等屏幕 (900-1199px) - 自适应宽度优化 */
+@media (min-width: 900px) and (max-width: 1199px) {
+  .zones-container {
+    padding: clamp(5px, 1vw, 8px) 20px; /* 保持20px左右边距 */
+    max-width: min(calc(100vw - 40px), 1400px);
+  }
+
   .zone-grid {
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(8, minmax(60px, auto));
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px, 1.5vw, 18px) !important;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .zone-row.two-columns {
+    gap: clamp(12px, 1.8vw, 22px) !important;
+  }
+
+  .zone-row.three-columns {
+    gap: clamp(8px, 1.2vw, 15px) !important;
+  }
+
+  /* 中小屏幕下的宽度调整 - 合理比例 */
+  .zone-row.two-columns .zone-middle {
+    flex: 1 1 45%; /* 小屏幕下中台区域比例进一步增大 */
+    min-width: 280px;
+    max-width: 400px;
+  }
+  .zone-row.two-columns .zone-app {
+    flex: 1 1 55%;
+    min-width: 300px;
+  }
+
+  .zone-row.three-columns .zone-dmz {
+    min-width: 250px;
+  }
+
+  .zone-row.three-columns .zone-mrs {
+    min-width: 350px;
+  }
+
+  .zone-row.three-columns .zone-cloud {
+    min-width: 280px;
+  }
+}
+
+/* 中小屏幕 (600-899px) - 垂直布局 */
+@media (min-width: 600px) and (max-width: 899px) {
+  .zones-container {
+    padding: clamp(5px, 1vw, 8px) 20px; /* 保持20px左右边距 */
+    max-width: min(calc(100vw - 40px), 95vw);
+  }
+
+  .zone-grid {
+    display: flex;
+    flex-direction: column;
     gap: clamp(12px, 2vw, 18px);
+    max-width: 100%;
+    margin: 0 auto;
   }
 
-  .zone-dmz {
-    grid-column: 1 / 2;
-    grid-row: 1 / 2;
+  .zone-row.two-columns,
+  .zone-row.three-columns {
+    flex-direction: column;
+    gap: clamp(15px, 2.5vw, 20px) !important;
   }
-  .zone-mrs {
-    grid-column: 2 / 4;
-    grid-row: 1 / 3;
-  }
-  .zone-middle {
-    grid-column: 4 / 7;
-    grid-row: 1 / 4;
-  }
-  .zone-app {
-    grid-column: 1 / 4;
-    grid-row: 2 / 6;
-  }
-  .zone-cloud {
-    grid-column: 4 / 7;
-    grid-row: 4 / 9;
+
+  .zone-row.two-columns .zone-middle,
+  .zone-row.two-columns .zone-app,
+  .zone-row.three-columns .zone-dmz,
+  .zone-row.three-columns .zone-mrs,
+  .zone-row.three-columns .zone-cloud {
+    flex: 1;
+    width: 100%;
+    min-width: auto;
   }
 }
 
 /* 小屏幕 (500-699px) - 垂直布局优化 */
 @media (min-width: 500px) and (max-width: 699px) {
-  .zone-grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    gap: clamp(15px, 3vw, 20px);
+  .zones-container {
+    padding: clamp(5px, 1vw, 8px) 20px; /* 保持20px左右边距 */
+    max-width: min(calc(100vw - 40px), 100vw);
   }
 
-  .zone-dmz,
-  .zone-mrs,
-  .zone-middle,
-  .zone-app,
-  .zone-cloud {
-    grid-column: 1;
-    grid-row: auto;
+  .zone-grid {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8px, 2vw, 12px);
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .zone-row.two-columns,
+  .zone-row.three-columns {
+    flex-direction: column;
+    gap: clamp(12px, 2vw, 18px) !important;
+  }
+
+  .zone-row.two-columns .zone-middle {
+    flex: 0 1 auto;
+    width: fit-content; /* 中台区域在小屏幕上也保持紧凑 */
+  }
+
+  .zone-row.two-columns .zone-app,
+  .zone-row.three-columns .zone-dmz,
+  .zone-row.three-columns .zone-mrs,
+  .zone-row.three-columns .zone-cloud {
+    flex: 1;
+    width: 100%;
+    min-width: auto; /* 移除最小宽度限制 */
   }
 
   .zone-dmz {
     min-height: 160px;
+    max-height: none;
   }
   .zone-mrs {
     min-height: 240px;
+    max-height: none;
   }
   .zone-cloud {
     min-height: 220px;
+    max-height: none;
   }
   .zone-middle {
     min-height: 300px;
+    max-height: none;
   }
   .zone-app {
     min-height: 350px;
+    max-height: none;
+  }
+
+  .apps-container {
+    justify-content: flex-start;
+    gap: 8px;
   }
 }
 
 /* 超小屏幕 (<500px) - 单列紧凑布局 */
 @media (max-width: 499px) {
-  .zone-grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    gap: clamp(12px, 3vw, 18px);
+  .zones-container {
+    padding: clamp(12px, 4vw, 18px) 20px; /* 保持20px左右边距 */
+    max-width: min(calc(100vw - 40px), 100vw);
   }
 
-  .zone-dmz,
-  .zone-mrs,
-  .zone-middle,
-  .zone-app,
-  .zone-cloud {
-    grid-column: 1;
-    grid-row: auto;
+  .zone-grid {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(6px, 2vw, 10px);
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .zone-row.two-columns,
+  .zone-row.three-columns {
+    flex-direction: column;
+    gap: clamp(10px, 2vw, 15px) !important;
+  }
+
+  .zone-row.two-columns .zone-middle {
+    flex: 0 1 auto;
+    width: fit-content; /* 中台区域在超小屏幕上也保持紧凑 */
+  }
+
+  .zone-row.two-columns .zone-app,
+  .zone-row.three-columns .zone-dmz,
+  .zone-row.three-columns .zone-mrs,
+  .zone-row.three-columns .zone-cloud {
+    flex: 1;
+    width: 100%;
+    min-width: auto; /* 移除最小宽度限制 */
   }
 
   .zone-dmz {
     min-height: 140px;
+    max-height: none;
   }
   .zone-mrs {
     min-height: 200px;
+    max-height: none;
   }
   .zone-cloud {
     min-height: 180px;
+    max-height: none;
   }
   .zone-middle {
     min-height: 260px;
+    max-height: none;
   }
   .zone-app {
     min-height: 300px;
+    max-height: none;
   }
 
-  .zones-container {
-    padding: clamp(12px, 4vw, 18px) clamp(6px, 2vw, 8px);
+  .apps-container {
+    justify-content: flex-start;
+    gap: 6px;
+  }
+
+  .app-button-face {
+    padding: clamp(4px, 1.5vw, 8px) clamp(8px, 2vw, 12px);
+    font-size: clamp(10px, 2.5vw, 12px);
+    min-width: min-content;
+  }
+
+  .app-name {
+    font-size: clamp(9px, 2.8vw, 11px);
+    text-shadow:
+      0 0 4px rgba(255, 255, 255, 0.6),
+      0 1px 2px rgba(0, 0, 0, 0.9);
+  }
+
+  .app-info {
+    font-size: clamp(9px, 2.2vw, 11px);
   }
 }
+
