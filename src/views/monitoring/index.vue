@@ -12,66 +12,10 @@
     <!-- 区域容器 -->
     <div ref="zonesContainer" class="zones-container">
       <div ref="zoneGrid" class="zone-grid">
-        <!-- DMZ区域 -->
-        <div class="zone zone-dmz">
-          <div class="zone-header">
-            <div>
-              <div class="zone-title">DMZ区域</div>
-              <div class="zone-description">外部访问控制与安全防护</div>
-            </div>
-          </div>
-          <div class="apps-container">
-            <div
-              v-for="app in dmzApps"
-              :key="app.id"
-              class="app-button-3d"
-              @click="handleAppClick(app)"
-            >
-              <div class="app-button-face app-button-front" :class="app.status">
-                <div class="app-name">{{ app.name }}</div>
-              </div>
-              <div class="app-button-face app-button-back">
-                <div class="app-info">
-                  <div>CPU: {{ app.cpu }}%</div>
-                  <div>内存: {{ app.memory }}%</div>
-                  <div>状态: {{ app.statusText }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 大数据MRS区域 -->
-        <div class="zone zone-mrs">
-          <div class="zone-header">
-            <div>
-              <div class="zone-title">大数据MRS区域</div>
-              <div class="zone-description">数据处理与分析中心</div>
-            </div>
-          </div>
-          <div class="apps-container">
-            <div
-              v-for="app in mrsApps"
-              :key="app.id"
-              class="app-button-3d"
-              @click="handleAppClick(app)"
-            >
-              <div class="app-button-face app-button-front" :class="app.status">
-                <div class="app-name">{{ app.name }}</div>
-              </div>
-              <div class="app-button-face app-button-back">
-                <div class="app-info">
-                  <div>CPU: {{ app.cpu }}%</div>
-                  <div>内存: {{ app.memory }}%</div>
-                  <div>状态: {{ app.statusText }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 中台区域 -->
-        <div class="zone zone-middle">
+        <!-- 第一行：中台区域 + 应用区域 -->
+        <div class="zone-row two-columns">
+          <!-- 中台区域 -->
+          <div class="zone zone-middle">
           <div class="zone-header">
             <div>
               <div class="zone-title">中台区域</div>
@@ -205,9 +149,70 @@
             </div>
           </div>
         </div>
+        </div>
 
-        <!-- 云平台区域 -->
-        <div class="zone zone-cloud">
+        <!-- 第二行：DMZ区域 + 大数据MRS区域 + 云平台区域（三列布局） -->
+        <div class="zone-row three-columns">
+          <!-- DMZ区域 -->
+          <div class="zone zone-dmz">
+            <div class="zone-header">
+              <div>
+                <div class="zone-title">DMZ区域</div>
+                <div class="zone-description">外部访问控制与安全防护</div>
+              </div>
+            </div>
+            <div class="apps-container">
+              <div
+                v-for="app in dmzApps"
+                :key="app.id"
+                class="app-button-3d"
+                @click="handleAppClick(app)"
+              >
+                <div class="app-button-face app-button-front" :class="app.status">
+                  <div class="app-name">{{ app.name }}</div>
+                </div>
+                <div class="app-button-face app-button-back">
+                  <div class="app-info">
+                    <div>CPU: {{ app.cpu }}%</div>
+                    <div>内存: {{ app.memory }}%</div>
+                    <div>状态: {{ app.statusText }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 大数据MRS区域 -->
+          <div class="zone zone-mrs">
+            <div class="zone-header">
+              <div>
+                <div class="zone-title">大数据MRS区域</div>
+                <div class="zone-description">数据处理与分析中心</div>
+              </div>
+            </div>
+            <div class="apps-container">
+              <div
+                v-for="app in mrsApps"
+                :key="app.id"
+                class="app-button-3d"
+                @click="handleAppClick(app)"
+              >
+                <div class="app-button-face app-button-front" :class="app.status">
+                  <div class="app-name">{{ app.name }}</div>
+                </div>
+                <div class="app-button-face app-button-back">
+                  <div class="app-info">
+                    <div>CPU: {{ app.cpu }}%</div>
+                    <div>内存: {{ app.memory }}%</div>
+                    <div>状态: {{ app.statusText }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 云平台区域 -->
+          <div class="zone zone-cloud">
           <div class="zone-header">
             <div>
               <div class="zone-title">云平台区域</div>
@@ -236,6 +241,7 @@
         </div>
       </div>
     </div>
+    </div>
 
     <!-- 3D悬浮统计信息栏 -->
     <div class="stats-bar">
@@ -259,6 +265,7 @@
       </div>
     </div>
   </div>
+
 </template>
 
 <script setup lang="ts">
@@ -339,6 +346,120 @@ const handleStatClick = (statType: string) => {
 
 let dataUpdateInterval: number;
 
+// 获取DMZ区域的4个角坐标
+const getDMZCoordinates = () => {
+  const dmzElement = document.querySelector('.zone-dmz');
+  if (!dmzElement) {
+    console.log('DMZ区域未找到');
+    return null;
+  }
+
+  const rect = dmzElement.getBoundingClientRect();
+  const coordinates = {
+    topLeft: { x: rect.left, y: rect.top },
+    topRight: { x: rect.right, y: rect.top },
+    bottomLeft: { x: rect.left, y: rect.bottom },
+    bottomRight: { x: rect.right, y: rect.bottom },
+    width: rect.width,
+    height: rect.height,
+    centerX: rect.left + rect.width / 2,
+    centerY: rect.top + rect.height / 2
+  };
+
+  console.log('DMZ区域坐标:', coordinates);
+  return coordinates;
+};
+
+// 获取中台区域的4个角坐标
+const getMiddleZoneCoordinates = () => {
+  const middleElement = document.querySelector('.zone-middle');
+  if (!middleElement) {
+    console.log('中台区域未找到');
+    return null;
+  }
+
+  const rect = middleElement.getBoundingClientRect();
+  const coordinates = {
+    topLeft: { x: rect.left, y: rect.top },
+    topRight: { x: rect.right, y: rect.top },
+    bottomLeft: { x: rect.left, y: rect.bottom },
+    bottomRight: { x: rect.right, y: rect.bottom },
+    width: rect.width,
+    height: rect.height,
+    centerX: rect.left + rect.width / 2,
+    centerY: rect.top + rect.height / 2
+  };
+
+  console.log('中台区域坐标:', coordinates);
+  return coordinates;
+};
+
+// 获取MRS区域的坐标
+const getMRSCoordinates = () => {
+  const mrsElement = document.querySelector('.zone-mrs');
+  if (!mrsElement) {
+    console.log('MRS区域未找到');
+    return null;
+  }
+
+  const rect = mrsElement.getBoundingClientRect();
+  const coordinates = {
+    topLeft: { x: rect.left, y: rect.top },
+    topRight: { x: rect.right, y: rect.top },
+    bottomLeft: { x: rect.left, y: rect.bottom },
+    bottomRight: { x: rect.right, y: rect.bottom },
+    width: rect.width,
+    height: rect.height,
+    centerX: rect.left + rect.width / 2,
+    centerY: rect.top + rect.height / 2
+  };
+
+  console.log('MRS区域坐标:', coordinates);
+  return coordinates;
+};
+
+// 获取DMZ与MRS区域之间的距离
+const getDMZToMRSDistance = () => {
+  const dmzCoords = getDMZCoordinates();
+  const mrsCoords = getMRSCoordinates();
+
+  if (dmzCoords && mrsCoords) {
+    const distance = mrsCoords.left - dmzCoords.right;
+    console.log('DMZ区域右边到MRS区域左边的距离:', distance + 'px');
+
+    // 检查是否接近50像素
+    if (Math.abs(distance - 50) < 5) {
+      console.log('✅ 距离设置正确，约为50像素');
+    } else {
+      console.log('❌ 距离需要调整，当前为', distance + 'px，目标为50px');
+    }
+
+    return distance;
+  }
+};
+
+// 获取两个区域的相对位置信息
+const getRelativePositions = () => {
+  const dmzCoords = getDMZCoordinates();
+  const middleCoords = getMiddleZoneCoordinates();
+
+  if (dmzCoords && middleCoords) {
+    const relativePosition = {
+      dmzToMiddle: {
+        horizontal: middleCoords.centerX - dmzCoords.centerX,
+        vertical: middleCoords.centerY - dmzCoords.centerY,
+        distance: Math.sqrt(
+          Math.pow(middleCoords.centerX - dmzCoords.centerX, 2) +
+          Math.pow(middleCoords.centerY - dmzCoords.centerY, 2)
+        )
+      }
+    };
+
+    console.log('DMZ与中台区域相对位置:', relativePosition);
+    return relativePosition;
+  }
+};
+
 onMounted(() => {
   // 初始化背景动画
   if (bgCanvas.value) {
@@ -357,6 +478,15 @@ onMounted(() => {
 
     // 定期更新数据
     dataUpdateInterval = window.setInterval(simulateDataUpdate, 5000);
+
+    // 获取并输出各区域坐标信息
+    setTimeout(() => {
+      getDMZCoordinates();
+      getMRSCoordinates();
+      getMiddleZoneCoordinates();
+      getDMZToMRSDistance();
+      getRelativePositions();
+    }, 1000);
   }, 1500);
 });
 

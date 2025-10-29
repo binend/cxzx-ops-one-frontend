@@ -657,32 +657,68 @@ export function useMonitoring() {
     };
   };
 
-  // 3D鼠标跟踪
+  // 3D鼠标跟踪 - 单个区域倾斜效果
   const add3DMouseTracking = (
     zonesContainer: HTMLElement,
     zoneGrid: HTMLElement
   ) => {
     const handleMouseMove = (e: MouseEvent) => {
-      const rect = zonesContainer.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width;
-      const y = (e.clientY - rect.top) / rect.height;
+      // 查找鼠标悬停的区域
+      const hoveredZone = (e.target as HTMLElement).closest('.zone') as HTMLElement;
 
-      const rotateY = (x - 0.5) * 10; // -10deg to 10deg
-      const rotateX = (y - 0.5) * -10; // -10deg to 10deg
+      if (hoveredZone) {
+        // 重置所有区域的transform
+        const allZones = zonesContainer.querySelectorAll('.zone');
+        allZones.forEach(zone => {
+          (zone as HTMLElement).style.transform = '';
+        });
 
-      zoneGrid.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        // 计算相对于当前区域的鼠标位置
+        const rect = hoveredZone.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
+
+        const rotateY = (x - 0.5) * 8; // -8deg to 8deg (稍微减小倾斜角度)
+        const rotateX = (y - 0.5) * -8; // -8deg to 8deg
+
+        // 只对当前悬停的区域应用倾斜效果
+        hoveredZone.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+        hoveredZone.style.transition = 'transform 0.1s ease-out';
+      }
     };
 
-    const handleMouseLeave = () => {
-      zoneGrid.style.transform = "rotateX(2deg) rotateY(0deg)";
+    const handleMouseLeave = (e: MouseEvent) => {
+      // 检查鼠标是否离开了整个容器
+      if (!e.relatedTarget || !(e.relatedTarget as HTMLElement).closest('.zones-container')) {
+        // 重置所有区域的transform
+        const allZones = zonesContainer.querySelectorAll('.zone');
+        allZones.forEach(zone => {
+          (zone as HTMLElement).style.transform = '';
+        });
+      }
+    };
+
+    // 为每个区域添加独立的鼠标离开事件
+    const handleZoneMouseLeave = (e: MouseEvent) => {
+      const zone = e.currentTarget as HTMLElement;
+      zone.style.transform = '';
     };
 
     zonesContainer.addEventListener("mousemove", handleMouseMove);
     zonesContainer.addEventListener("mouseleave", handleMouseLeave);
 
+    // 为每个区域添加独立的鼠标离开事件监听
+    const zones = zonesContainer.querySelectorAll('.zone');
+    zones.forEach(zone => {
+      zone.addEventListener("mouseleave", handleZoneMouseLeave);
+    });
+
     return () => {
       zonesContainer.removeEventListener("mousemove", handleMouseMove);
       zonesContainer.removeEventListener("mouseleave", handleMouseLeave);
+      zones.forEach(zone => {
+        zone.removeEventListener("mouseleave", handleZoneMouseLeave);
+      });
     };
   };
 
