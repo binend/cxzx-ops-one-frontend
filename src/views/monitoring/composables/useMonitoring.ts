@@ -469,6 +469,22 @@ export function useMonitoring() {
       statusText: "正常",
       cpu: 44,
       memory: 49
+    },
+    {
+      id: 209,
+      name: "创新药项目舆情热度系统",
+      status: "normal",
+      statusText: "正常",
+      cpu: 56,
+      memory: 62
+    },
+    {
+      id: 210,
+      name: "园区系统",
+      status: "warning",
+      statusText: "警告",
+      cpu: 72,
+      memory: 78
     }
   ]);
 
