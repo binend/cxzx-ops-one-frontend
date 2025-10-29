@@ -1,6 +1,5 @@
 .monitoring-container {
-  width: 100vw;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   position: relative;
   background: #ffffff;
   overflow-x: hidden;
@@ -8,27 +7,6 @@
   color: #333333;
 }
 
-/* 强制减少所有间距的紧凑布局规则 */
-.zone-grid {
-  gap: clamp(8px, 1.5vw, 15px) !important;
-  margin-bottom: 15px !important;
-  row-gap: clamp(8px, 1.5vw, 12px) !important; /* 减少行间距 */
-  column-gap: clamp(8px, 1.5vw, 15px) !important; /* 恢复正常的列间距 */ /* 保持列间距 */
-}
-
-.zones-container {
-  padding: clamp(8px, 1.5vw, 12px) clamp(12px, 1.8vw, 16px) !important;
-}
-
-.zone-header {
-  margin-bottom: clamp(8px, 1.5vw, 10px) !important;
-  padding-bottom: clamp(6px, 1vw, 10px) !important;
-}
-
-.middle-section {
-  margin-bottom: clamp(6px, 1.2vw, 10px) !important;
-  padding: clamp(6px, 1.2vw, 10px) !important;
-}
 
 .apps-container {
   padding: 8px 0;
@@ -103,10 +81,6 @@
   text-align: center;
 }
 
-.stats-bar {
-  margin: clamp(5px, 1vw, 8px) auto clamp(6px, 1.2vw, 10px) auto !important;
-  padding: clamp(6px, 1.2vw, 10px) clamp(10px, 1.8vw, 15px) !important;
-}
 
 /* 背景动画 */
 .background-animation {
@@ -157,22 +131,22 @@
   gap: clamp(15px, 2vw, 25px) !important;
 }
 
-/* 第一行区域特殊处理：合理比例分配 */
+/* 第一行区域特殊处理：修改为1:1比例 */
 .zone-row.two-columns .zone-middle {
-  flex: 1 1 35%; /* 中台区域占35%宽度，比应用区域略窄 */
-  min-width: 320px; /* 设置合理的最小宽度 */
-  max-width: 500px; /* 设置最大宽度，防止过宽 */
+  flex: 1 1 50%; /* 修改为50%宽度，与应用区域相同 */
+  min-width: 320px; /* 保留合理的最小宽度 */
+  max-width: none; /* 移除最大宽度限制 */
   margin: 0;
 }
 
 .zone-row.two-columns .zone-app {
-  flex: 1 1 65%; /* 应用区域占65%宽度，获得更多空间 */
-  min-width: 400px; /* 设置合理的最小宽度 */
-  max-width: none; /* 不限制最大宽度 */
+  flex: 1 1 50%; /* 修改为50%宽度，与中台区域相同 */
+  min-width: 320px; /* 设置合理的最小宽度 */
+  max-width: none;
   margin: 0;
 }
 
-/* 第二行：三列布局（DMZ + MRS + 云平台） */
+/* 第二行：三列布局（DMZ + 大数据 + 云平台） */
 .zone-row.three-columns {
   display: flex;
   justify-content: space-between;
@@ -189,8 +163,8 @@
 }
 
 .zone-row.three-columns .zone-mrs {
-  flex: 2 1 auto; /* MRS区域权重稍大，应用更多 */
-  min-width: 350px; /* MRS区域最小宽度更大 */
+  flex: 2 1 auto; /* 大数据区域权重稍大，应用更多 */
+  min-width: 350px; /* 大数据区域最小宽度更大 */
   max-width: none; /* 不限制最大宽度 */
 }
 
@@ -207,12 +181,12 @@
   min-width: 0; /* 允许flex项目缩小 */
 }
 
-/* 中台区域使用独立的紧凑设置，不受默认规则影响 */
+/* 移除影响布局的强制样式 */
 .zone-middle {
-  flex: 0 1 auto !important; /* 强制不主动增长 */
-  width: fit-content !important; /* 强制宽度适应内容 */
-  min-width: auto !important; /* 强制移除最小宽度 */
-  max-width: none !important; /* 不限制最大宽度 */
+  flex: 1 1 50% !important; /* 确保使用1:1比例 */
+  width: auto !important; /* 移除fit-content限制 */
+  min-width: 320px !important; /* 保留最小宽度 */
+  max-width: none !important;
 }
 
 /* 云平台区域特殊处理 */
@@ -234,7 +208,7 @@
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(15px);
   border-radius: 20px;
-  padding: clamp(15px, 3vw, 25px);
+  padding: clamp(5px, 3vw, 5px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -244,6 +218,7 @@
   perspective: 1000px;
   min-height: 200px;
   box-sizing: border-box;
+
   /* 为3D变换添加更平滑的过渡 */
   transform-origin: center center;
   /* 自适应宽度设置 */
@@ -256,7 +231,6 @@
   min-height: auto !important;
   height: fit-content !important;
   width: 100%; /* 占满flex容器空间 */
-  padding: clamp(8px, 1.2vw, 15px) !important;
   background: linear-gradient(
     135deg,
     rgba(0, 0, 0, 0.85),
@@ -267,6 +241,10 @@
   margin: 0; /* 去掉居中，让flex控制 */
   /* 在第三行中适当调整最小高度 */
   min-height: 160px !important;
+}
+.dmz-wrap {
+  display: flex;
+  flex-direction: column;
 }
 
 .zone-dmz .zone-header {
@@ -288,7 +266,7 @@
   transform: scale(0.9) !important;
 }
 
-/* MRS区域 - 中等区域(9个应用) - 三列布局中间 */
+/* 大数据区域 - 中等区域(9个应用) - 三列布局中间 */
 .zone-mrs {
   min-height: auto;
   height: fit-content;
@@ -297,7 +275,7 @@
     rgba(0, 20, 40, 0.85),
     rgba(0, 0, 0, 0.8)
   );
-  padding: clamp(12px, 2vw, 20px);
+  padding: clamp(5px, 2vw, 5px);
   display: flex;
   flex-direction: column;
   /* 在三列布局中移除居中限制，让flex控制 */
@@ -323,7 +301,7 @@
     rgba(40, 0, 40, 0.85),
     rgba(0, 0, 0, 0.8)
   );
-  padding: clamp(15px, 2.5vw, 25px);
+  padding: clamp(5px, 2.5vw, 5px);
   display: flex;
   flex-direction: column;
   margin-top: 0; /* 移除负的上边距，在第三行中正常排列 */
@@ -345,7 +323,7 @@
     rgba(0, 40, 20, 0.85),
     rgba(0, 0, 0, 0.8)
   );
-  padding: clamp(15px, 2.5vw, 25px);
+  padding: clamp(5px, 2.5vw, 5px);
   display: flex;
   flex-direction: column;
   margin-top: -10px; /* 负的上边距让区域上移 */
@@ -353,7 +331,7 @@
 }
 
 .zone-middle .zone-header {
-  margin-bottom: clamp(8px, 1.5vw, 12px) !important;
+  margin-bottom: clamp(8px, 1.5vw, 6px) !important;
   padding-bottom: clamp(6px, 1vw, 10px) !important;
 }
 
@@ -373,7 +351,7 @@
     rgba(40, 20, 0, 0.85),
     rgba(0, 0, 0, 0.8)
   );
-  padding: clamp(15px, 2.5vw, 25px);
+  padding: clamp(5px, 2.5vw, 5px);
   display: flex;
   flex-direction: column;
   margin: -15px 0 0 0; /* 保持上移效果 */
@@ -740,44 +718,6 @@
   padding-top: 0;
 }
 
-/* 应用容器 */
-.apps-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(3px, 0.8vw, 6px);
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  align-content: flex-start;
-  padding: 6px 0;
-}
-
-/* 不同区域应用容器的特殊处理 */
-.zone-dmz .apps-container {
-  justify-content: center;
-  gap: clamp(15px, 3vw, 20px);
-}
-
-.zone-mrs .apps-container {
-  justify-content: flex-start;
-  gap: clamp(8px, 1.5vw, 12px);
-}
-
-.zone-cloud .apps-container {
-  justify-content: flex-start;
-  gap: clamp(8px, 1.5vw, 12px);
-  padding: 0;
-}
-
-.zone-middle .apps-container {
-  justify-content: flex-start;
-  gap: clamp(6px, 1.2vw, 10px);
-}
-
-.zone-app .apps-container {
-  justify-content: flex-start;
-  gap: clamp(5px, 1vw, 8px);
-}
 
 /* ECS应用特殊样式优化 */
 .zone-app .app-button-3d,
@@ -1158,11 +1098,11 @@
 /* 3D悬浮统计栏 */
 .stats-bar {
   position: relative;
-  margin: clamp(15px, 3vw, 25px) auto clamp(10px, 2vw, 20px) auto;
+  margin: 4px 16px;
   background: rgba(0, 0, 0, 0.9);
   backdrop-filter: blur(20px);
   border-radius: 20px;
-  padding: clamp(10px, 2vw, 18px) clamp(15px, 3vw, 35px);
+  padding: clamp(10px, 2vw, 5px) clamp(15px, 3vw, 35px);
   z-index: 200;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow:
@@ -1172,7 +1112,6 @@
   transform-style: preserve-3d;
   perspective: 1000px;
   animation: statsFloat 5s ease-in-out infinite;
-  max-width: min(1100px, 92vw);
   box-sizing: border-box;
 }
 
@@ -1221,7 +1160,7 @@
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   transform-style: preserve-3d;
-  padding: clamp(8px, 1.5vw, 12px) clamp(12px, 2.5vw, 20px);
+  padding: clamp(6px, 1.5vw, 6px) clamp(6px, 2.5vw, 6px);
   border-radius: 16px;
   background: linear-gradient(
     135deg,
@@ -1232,7 +1171,7 @@
   border: 1px solid rgba(255, 255, 255, 0.15);
   animation: statItemFloat 4s ease-in-out infinite;
   flex-shrink: 0;
-  min-width: 90px;
+  flex: 1;
 }
 
 /* 为不同统计项设置不同的悬浮延迟 */
@@ -1307,6 +1246,54 @@
   text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
 }
 
+/* 运行状态项绿色背景闪烁 - 始终闪烁 */
+.stat-item.stat-running {
+  animation: statRunningFlash 3s ease-in-out infinite;
+  border-color: rgba(40, 180, 40, 0.8) !important;
+}
+
+.stat-item.stat-running .stat-value {
+  color: #ffffff !important;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.9);
+}
+
+.stat-item.stat-running .stat-label {
+  color: #ffffff !important;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+}
+
+/* 警告状态项黄色中等闪烁 - 仅当警告不为0时 */
+.stat-item.stat-warning {
+  animation: statWarningFlash 2s ease-in-out infinite;
+  border-color: rgba(255, 170, 0, 0.8) !important;
+}
+
+.stat-item.stat-warning .stat-value {
+  color: #ffffff !important;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.9);
+}
+
+.stat-item.stat-warning .stat-label {
+  color: #ffffff !important;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+}
+
+/* 错误状态项红色快速闪缩 - 仅当错误不为0时 */
+.stat-item.stat-error {
+  animation: statErrorFlash 1s ease-in-out infinite;
+  border-color: rgba(220, 30, 30, 0.8) !important;
+}
+
+.stat-item.stat-error .stat-value {
+  color: #ffffff !important;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.9);
+}
+
+.stat-item.stat-error .stat-label {
+  color: #ffffff !important;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.8);
+}
+
 /* 加载动画 */
 .loading {
   position: fixed;
@@ -1336,319 +1323,175 @@
   }
 }
 
-/* 智能响应式布局 */
-
-/* 大屏幕 (≥1600px) - 自适应宽度优化 */
-@media (min-width: 1600px) {
-  .zones-container {
-    padding: clamp(5px, 1vw, 8px) 20px; /* 保持20px左右边距 */
-    max-width: min(calc(100vw - 40px), 2000px);
+/* 运行项绿色背景闪烁动画 - 始终闪烁，与应用按钮颜色一致 */
+@keyframes statRunningFlash {
+  0%,
+  100% {
+    transform: scale(1);
+    background: linear-gradient(
+      135deg,
+      rgba(40, 180, 40, 0.9),
+      rgba(30, 140, 30, 0.8)
+    );
+    box-shadow:
+      0 6px 20px rgba(0, 0, 0, 0.3),
+      0 0 20px rgba(40, 180, 40, 0.6),
+      inset 0 0 15px rgba(40, 180, 40, 0.2);
+    border-color: rgba(40, 180, 40, 1);
   }
-
-  .zone-grid {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(15px, 2vw, 25px) !important;
-    max-width: 100%;
-    margin: 0 auto;
+  25% {
+    transform: scale(0.96);
+    background: linear-gradient(
+      135deg,
+      rgba(45, 190, 45, 0.95),
+      rgba(35, 150, 35, 0.85)
+    );
+    box-shadow:
+      0 4px 18px rgba(0, 0, 0, 0.32),
+      0 0 25px rgba(40, 180, 40, 0.8),
+      inset 0 0 18px rgba(40, 180, 40, 0.3);
+    border-color: rgba(45, 190, 45, 1);
   }
-
-  .zone-row.two-columns {
-    gap: clamp(20px, 2.5vw, 30px) !important;
+  50% {
+    transform: scale(0.94);
+    background: linear-gradient(
+      135deg,
+      rgba(50, 200, 50, 1),
+      rgba(40, 160, 40, 0.9)
+    );
+    box-shadow:
+      0 3px 15px rgba(0, 0, 0, 0.35),
+      0 0 30px rgba(40, 180, 40, 1),
+      inset 0 0 20px rgba(40, 180, 40, 0.4);
+    border-color: rgba(50, 200, 50, 1);
   }
-
-  .zone-row.three-columns {
-    gap: clamp(15px, 2vw, 25px) !important;
-  }
-
-  /* 大屏幕下的宽度调整 - 合理比例 */
-  .zone-row.two-columns .zone-middle {
-    flex: 1 1 35%;
-    min-width: 320px;
-    max-width: 600px;
-  }
-  .zone-row.two-columns .zone-app {
-    flex: 1 1 65%;
-    min-width: 500px;
-  }
-
-  .zone-row.three-columns .zone-dmz {
-    min-width: 300px;
-  }
-
-  .zone-row.three-columns .zone-mrs {
-    min-width: 450px;
-  }
-
-  .zone-row.three-columns .zone-cloud {
-    min-width: 350px;
-  }
-}
-
-/* 中大屏幕 (1200-1599px) - 自适应宽度优化 */
-@media (min-width: 1200px) and (max-width: 1599px) {
-  .zones-container {
-    padding: clamp(5px, 1vw, 8px) 20px; /* 保持20px左右边距 */
-    max-width: min(calc(100vw - 40px), 1600px);
-  }
-
-  .zone-grid {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(12px, 1.8vw, 20px) !important;
-    max-width: 100%;
-    margin: 0 auto;
-  }
-
-  .zone-row.two-columns {
-    gap: clamp(15px, 2vw, 25px) !important;
-  }
-
-  .zone-row.three-columns {
-    gap: clamp(10px, 1.5vw, 18px) !important;
-  }
-
-  /* 中等屏幕下的宽度调整 - 合理比例 */
-  .zone-row.two-columns .zone-middle {
-    flex: 1 1 40%; /* 中等屏幕下中台区域比例稍大 */
-    min-width: 300px;
-    max-width: 450px;
-  }
-  .zone-row.two-columns .zone-app {
-    flex: 1 1 60%;
-    min-width: 350px;
-  }
-
-  .zone-row.three-columns .zone-dmz {
-    min-width: 280px;
-  }
-
-  .zone-row.three-columns .zone-mrs {
-    min-width: 400px;
-  }
-
-  .zone-row.three-columns .zone-cloud {
-    min-width: 320px;
+  75% {
+    transform: scale(0.97);
+    background: linear-gradient(
+      135deg,
+      rgba(45, 190, 45, 0.95),
+      rgba(35, 150, 35, 0.85)
+    );
+    box-shadow:
+      0 5px 18px rgba(0, 0, 0, 0.32),
+      0 0 22px rgba(40, 180, 40, 0.7),
+      inset 0 0 17px rgba(40, 180, 40, 0.25);
+    border-color: rgba(45, 190, 45, 1);
   }
 }
 
-/* 中等屏幕 (900-1199px) - 自适应宽度优化 */
-@media (min-width: 900px) and (max-width: 1199px) {
-  .zones-container {
-    padding: clamp(5px, 1vw, 8px) 20px; /* 保持20px左右边距 */
-    max-width: min(calc(100vw - 40px), 1400px);
+/* 警告项黄色背景中等闪烁动画 - 仅当警告不为0时 */
+@keyframes statWarningFlash {
+  0%,
+  100% {
+    transform: scale(1);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 170, 0, 0.9),
+      rgba(255, 130, 0, 0.8)
+    );
+    box-shadow:
+      0 6px 20px rgba(0, 0, 0, 0.3),
+      0 0 20px rgba(255, 170, 0, 0.6),
+      inset 0 0 15px rgba(255, 215, 0, 0.1);
+    border-color: rgba(255, 170, 0, 1);
   }
-
-  .zone-grid {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(10px, 1.5vw, 18px) !important;
-    max-width: 100%;
-    margin: 0 auto;
+  25% {
+    transform: scale(0.95);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 180, 0, 0.95),
+      rgba(255, 140, 0, 0.85)
+    );
+    box-shadow:
+      0 4px 18px rgba(0, 0, 0, 0.35),
+      0 0 25px rgba(255, 170, 0, 0.8),
+      inset 0 0 18px rgba(255, 215, 0, 0.15);
+    border-color: rgba(255, 180, 0, 1);
   }
-
-  .zone-row.two-columns {
-    gap: clamp(12px, 1.8vw, 22px) !important;
+  50% {
+    transform: scale(0.92);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 190, 0, 1),
+      rgba(255, 150, 0, 0.9)
+    );
+    box-shadow:
+      0 3px 15px rgba(0, 0, 0, 0.4),
+      0 0 30px rgba(255, 170, 0, 1),
+      inset 0 0 20px rgba(255, 215, 0, 0.2);
+    border-color: rgba(255, 190, 0, 1);
   }
-
-  .zone-row.three-columns {
-    gap: clamp(8px, 1.2vw, 15px) !important;
-  }
-
-  /* 中小屏幕下的宽度调整 - 合理比例 */
-  .zone-row.two-columns .zone-middle {
-    flex: 1 1 45%; /* 小屏幕下中台区域比例进一步增大 */
-    min-width: 280px;
-    max-width: 400px;
-  }
-  .zone-row.two-columns .zone-app {
-    flex: 1 1 55%;
-    min-width: 300px;
-  }
-
-  .zone-row.three-columns .zone-dmz {
-    min-width: 250px;
-  }
-
-  .zone-row.three-columns .zone-mrs {
-    min-width: 350px;
-  }
-
-  .zone-row.three-columns .zone-cloud {
-    min-width: 280px;
-  }
-}
-
-/* 中小屏幕 (600-899px) - 垂直布局 */
-@media (min-width: 600px) and (max-width: 899px) {
-  .zones-container {
-    padding: clamp(5px, 1vw, 8px) 20px; /* 保持20px左右边距 */
-    max-width: min(calc(100vw - 40px), 95vw);
-  }
-
-  .zone-grid {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(12px, 2vw, 18px);
-    max-width: 100%;
-    margin: 0 auto;
-  }
-
-  .zone-row.two-columns,
-  .zone-row.three-columns {
-    flex-direction: column;
-    gap: clamp(15px, 2.5vw, 20px) !important;
-  }
-
-  .zone-row.two-columns .zone-middle,
-  .zone-row.two-columns .zone-app,
-  .zone-row.three-columns .zone-dmz,
-  .zone-row.three-columns .zone-mrs,
-  .zone-row.three-columns .zone-cloud {
-    flex: 1;
-    width: 100%;
-    min-width: auto;
+  75% {
+    transform: scale(0.96);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 180, 0, 0.95),
+      rgba(255, 140, 0, 0.85)
+    );
+    box-shadow:
+      0 5px 18px rgba(0, 0, 0, 0.32),
+      0 0 22px rgba(255, 170, 0, 0.7),
+      inset 0 0 17px rgba(255, 215, 0, 0.12);
+    border-color: rgba(255, 180, 0, 1);
   }
 }
 
-/* 小屏幕 (500-699px) - 垂直布局优化 */
-@media (min-width: 500px) and (max-width: 699px) {
-  .zones-container {
-    padding: clamp(5px, 1vw, 8px) 20px; /* 保持20px左右边距 */
-    max-width: min(calc(100vw - 40px), 100vw);
+/* 错误项红色背景快速闪缩动画 - 仅当错误不为0时 */
+@keyframes statErrorFlash {
+  0%,
+  100% {
+    transform: scale(1);
+    background: linear-gradient(
+      135deg,
+      rgba(220, 30, 30, 0.95),
+      rgba(180, 20, 20, 0.85)
+    );
+    box-shadow:
+      0 6px 20px rgba(0, 0, 0, 0.3),
+      0 0 25px rgba(220, 30, 30, 0.7),
+      inset 0 0 15px rgba(255, 107, 107, 0.1);
+    border-color: rgba(220, 30, 30, 1);
   }
-
-  .zone-grid {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(8px, 2vw, 12px);
-    max-width: 100%;
-    margin: 0 auto;
+  25% {
+    transform: scale(0.92);
+    background: linear-gradient(
+      135deg,
+      rgba(230, 40, 40, 1),
+      rgba(190, 30, 30, 0.9)
+    );
+    box-shadow:
+      0 3px 15px rgba(0, 0, 0, 0.4),
+      0 0 35px rgba(220, 30, 30, 0.9),
+      inset 0 0 20px rgba(255, 107, 107, 0.15);
+    border-color: rgba(230, 40, 40, 1);
   }
-
-  .zone-row.two-columns,
-  .zone-row.three-columns {
-    flex-direction: column;
-    gap: clamp(12px, 2vw, 18px) !important;
+  50% {
+    transform: scale(0.88);
+    background: linear-gradient(
+      135deg,
+      rgba(240, 50, 50, 1),
+      rgba(200, 40, 40, 0.95)
+    );
+    box-shadow:
+      0 2px 12px rgba(0, 0, 0, 0.5),
+      0 0 45px rgba(220, 30, 30, 1),
+      inset 0 0 25px rgba(255, 107, 107, 0.25);
+    border-color: rgba(240, 50, 50, 1);
   }
-
-  .zone-row.two-columns .zone-middle {
-    flex: 0 1 auto;
-    width: fit-content; /* 中台区域在小屏幕上也保持紧凑 */
-  }
-
-  .zone-row.two-columns .zone-app,
-  .zone-row.three-columns .zone-dmz,
-  .zone-row.three-columns .zone-mrs,
-  .zone-row.three-columns .zone-cloud {
-    flex: 1;
-    width: 100%;
-    min-width: auto; /* 移除最小宽度限制 */
-  }
-
-  .zone-dmz {
-    min-height: 160px;
-    max-height: none;
-  }
-  .zone-mrs {
-    min-height: 240px;
-    max-height: none;
-  }
-  .zone-cloud {
-    min-height: 220px;
-    max-height: none;
-  }
-  .zone-middle {
-    min-height: 300px;
-    max-height: none;
-  }
-  .zone-app {
-    min-height: 350px;
-    max-height: none;
-  }
-
-  .apps-container {
-    justify-content: flex-start;
-    gap: 8px;
+  75% {
+    transform: scale(0.94);
+    background: linear-gradient(
+      135deg,
+      rgba(230, 40, 40, 1),
+      rgba(190, 30, 30, 0.9)
+    );
+    box-shadow:
+      0 4px 18px rgba(0, 0, 0, 0.35),
+      0 0 30px rgba(220, 30, 30, 0.8),
+      inset 0 0 18px rgba(255, 107, 107, 0.12);
+    border-color: rgba(230, 40, 40, 1);
   }
 }
 
-/* 超小屏幕 (<500px) - 单列紧凑布局 */
-@media (max-width: 499px) {
-  .zones-container {
-    padding: clamp(12px, 4vw, 18px) 20px; /* 保持20px左右边距 */
-    max-width: min(calc(100vw - 40px), 100vw);
-  }
-
-  .zone-grid {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(6px, 2vw, 10px);
-    max-width: 100%;
-    margin: 0 auto;
-  }
-
-  .zone-row.two-columns,
-  .zone-row.three-columns {
-    flex-direction: column;
-    gap: clamp(10px, 2vw, 15px) !important;
-  }
-
-  .zone-row.two-columns .zone-middle {
-    flex: 0 1 auto;
-    width: fit-content; /* 中台区域在超小屏幕上也保持紧凑 */
-  }
-
-  .zone-row.two-columns .zone-app,
-  .zone-row.three-columns .zone-dmz,
-  .zone-row.three-columns .zone-mrs,
-  .zone-row.three-columns .zone-cloud {
-    flex: 1;
-    width: 100%;
-    min-width: auto; /* 移除最小宽度限制 */
-  }
-
-  .zone-dmz {
-    min-height: 140px;
-    max-height: none;
-  }
-  .zone-mrs {
-    min-height: 200px;
-    max-height: none;
-  }
-  .zone-cloud {
-    min-height: 180px;
-    max-height: none;
-  }
-  .zone-middle {
-    min-height: 260px;
-    max-height: none;
-  }
-  .zone-app {
-    min-height: 300px;
-    max-height: none;
-  }
-
-  .apps-container {
-    justify-content: flex-start;
-    gap: 6px;
-  }
-
-  .app-button-face {
-    padding: clamp(4px, 1.5vw, 8px) clamp(8px, 2vw, 12px);
-    font-size: clamp(10px, 2.5vw, 12px);
-    min-width: min-content;
-  }
-
-  .app-name {
-    font-size: clamp(9px, 2.8vw, 11px);
-    text-shadow:
-      0 0 4px rgba(255, 255, 255, 0.6),
-      0 1px 2px rgba(0, 0, 0, 0.9);
-  }
-
-  .app-info {
-    font-size: clamp(9px, 2.2vw, 11px);
-  }
-}
 
